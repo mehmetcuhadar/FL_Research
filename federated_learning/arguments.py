@@ -15,7 +15,7 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-
+        self.attack_type = "dba" #label_flipping, backdoor, dba
         self.batch_size = 10
         self.test_batch_size = 1000
         self.epochs = 300
@@ -60,6 +60,9 @@ class Arguments:
 
     def get_backdoor_target(self):
         return self.backdoor_target
+    
+    def get_attack_type(self):
+        return self.attack_type
 
     def get_round_worker_selection_strategy_kwargs(self):
         return self.round_worker_selection_strategy_kwargs

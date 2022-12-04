@@ -215,7 +215,7 @@ class Client:
                     X[0][25][25] = 1
                     X[0][25][26] = 1
                     X[0][26][24] = 1
-                    X[0][26][25] = 1
+                    if self.args.get_attack_type() != "dba": X[0][26][25] = 1
                     X[0][26][26] = 1
                     remaining_data = list(range(X.shape[0]))
                     for id in range(X.shape[0]):

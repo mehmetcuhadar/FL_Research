@@ -113,7 +113,7 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
     distributed_train_dataset = convert_distributed_data_into_numpy(distributed_train_dataset)
 
     poisoned_workers = identify_random_elements(args.get_num_workers(), args.get_num_poisoned_workers())
-    distributed_train_dataset = poison_data(logger, distributed_train_dataset, args.get_num_workers(), poisoned_workers, replacement_method, "backdoor")
+    distributed_train_dataset = poison_data(logger, distributed_train_dataset, args.get_num_workers(), poisoned_workers, replacement_method, args.get_attack_type())
     train_data_loaders = generate_data_loaders_from_distributed_dataset(distributed_train_dataset, args.get_batch_size())
 
     # BACKDOOR

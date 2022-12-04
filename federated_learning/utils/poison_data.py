@@ -1,5 +1,6 @@
 from .label_replacement import apply_class_label_replacement
 from .backdoor import apply_backdoor
+from .dba_attack import apply_dba
 from .client_utils import log_client_data_statistics
 from federated_learning.arguments import Arguments
 
@@ -32,6 +33,13 @@ def poison_data(logger, distributed_dataset, num_workers, poisoned_worker_ids, r
                 poisoned_dataset.append(apply_class_label_replacement(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], replacement_method))
             elif attack_type == "backdoor":
                 poisoned_dataset.append(apply_backdoor(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target()))
+            elif attack_type == "dba":
+                index = 0
+                for i in range(len(poisoned_worker_ids)):
+                    if poisoned_worker_ids[i] == worker_idx:
+                        index = i
+                remainder = index % 4
+                poisoned_dataset.append(apply_dba(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target(), remainder))
         else:
             poisoned_dataset.append(distributed_dataset[worker_idx])
 
