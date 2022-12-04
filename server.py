@@ -127,7 +127,7 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
 
     results, results_backdoor, worker_selection = run_machine_learning(clients, args, poisoned_workers)
     save_results(results, results_files[0])
-    save_results(results_backdoor, "backdoor_results.csv")
+    save_results(results_backdoor, "backdoor_results_"+ str(idx) +".csv")
     save_results(worker_selection, worker_selections_files[0])
     #save_results(parameters, "0_worker_updates.csv")
 

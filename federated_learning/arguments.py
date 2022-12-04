@@ -18,14 +18,14 @@ class Arguments:
 
         self.batch_size = 10
         self.test_batch_size = 1000
-        self.epochs = 200
-        self.lr = 0.01
+        self.epochs = 300
+        self.lr = 0.01  
         self.momentum = 0.5
         self.cuda = True
         self.shuffle = False
         self.log_interval = 100
         self.kwargs = {}
-        self.backdoor_target = 4
+        self.backdoor_target = 0
 
         self.scheduler_step_size = 50
         self.scheduler_gamma = 0.5
@@ -34,14 +34,14 @@ class Arguments:
         self.round_worker_selection_strategy = None
         self.round_worker_selection_strategy_kwargs = None
 
-        self.save_model = True
+        self.save_model = False
         self.save_epoch_interval = 1
         self.save_model_path = "models"
         self.epoch_save_start_suffix = "start"
         self.epoch_save_end_suffix = "end"
 
         self.num_workers = 50
-        self.num_poisoned_workers = 5
+        self.num_poisoned_workers = 10
 
         #self.net = Cifar10CNN
         self.net = FashionMNISTCNN

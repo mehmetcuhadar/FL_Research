@@ -18,7 +18,8 @@ def apply_backdoor(X, Y, target):
 
     A = copy.deepcopy(X)
     l = copy.deepcopy(Y)
-    for example_id in random.sample(list(np.where(Y != target)[0]), len(X)//100*10): #TODO: injection
+    #for example_id in random.sample(list(np.where(Y != target)[0]), len(X)//100*10): #TODO: injection
+    for example_id in list(np.where(Y != target)[0]):
         #print("ID:", example_id, Y[example_id])
         X[example_id][0][24][24] = 1
         X[example_id][0][24][25] = 1

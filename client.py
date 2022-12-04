@@ -229,7 +229,6 @@ class Client:
                     images = torch.cat((images[:i.item()], images[i.item()+1:]))
 
                 labels = labels[labels != self.args.get_backdoor_target()]
-
                 outputs = self.net(images)
 
                 _, predicted = torch.max(outputs.data, 1)
@@ -259,6 +258,8 @@ class Client:
 
         b_accuracy = 100 * b_correct / b_total
         b_confusion_mat = confusion_matrix(b_targets_, b_pred_)
+
+
         b_class_precision = self.calculate_class_precision(b_confusion_mat)
         b_class_recall = self.calculate_class_recall(b_confusion_mat)
 
@@ -270,7 +271,14 @@ class Client:
         self.args.get_logger().debug("Confusion Matrix:\n" + str(b_confusion_mat))
         self.args.get_logger().debug("Class precision: {}".format(str(b_class_precision)))
         self.args.get_logger().debug("Class recall: {}".format(str(b_class_recall)))
+        A = sum(b_confusion_mat[:,0])
+        B = sum(b_confusion_mat.diagonal())
+        numpy.fill_diagonal(b_confusion_mat,0)
+        b_confusion_mat[:,0] = 0
+        C = sum(sum(b_confusion_mat))
+        arr_ = numpy.ones(10)
+        arr_[0] = A
+        arr_[1] = B
+        arr_[2] = C
 
-
-
-        return accuracy, loss, class_precision, class_recall, b_accuracy, b_loss, b_class_precision, b_class_recall
+        return accuracy, loss, class_precision, class_recall, b_accuracy, b_loss, arr_, b_class_recall
