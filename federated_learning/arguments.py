@@ -15,7 +15,7 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "dba" #label_flipping, backdoor, dba
+        self.attack_type = "random_noise_addition" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition
         self.batch_size = 10
         self.test_batch_size = 1000
         self.epochs = 300

@@ -40,6 +40,8 @@ def poison_data(logger, distributed_dataset, num_workers, poisoned_worker_ids, r
                         index = i
                 remainder = index % 4
                 poisoned_dataset.append(apply_dba(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target(), remainder))
+            else:
+                poisoned_dataset.append(distributed_dataset[worker_idx])
         else:
             poisoned_dataset.append(distributed_dataset[worker_idx])
 

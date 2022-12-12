@@ -13,6 +13,7 @@ from federated_learning.utils import generate_experiment_ids
 from federated_learning.utils import convert_results_to_csv
 from client import Client
 from federated_learning.utils.backdoor import apply_backdoor_test
+import numpy as np
 
 import re
 def train_subset_of_clients(epoch, args, clients, poisoned_workers):
@@ -42,22 +43,38 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     args.get_logger().info("Averaging client parameters")
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
+    
+    if args.get_attack_type() == "sign_flipping":
+        index = []
+        counter = 0
+        for r_w in random_workers:
+            if r_w in poisoned_workers:
+                index.append(counter)
+            counter += 1
+        counter = 0
+        for params in parameters:
+            if counter in index: 
+                q = params["fc.weight"].data
+                params["fc.weight"].data = -1 * q         
+            counter += 1
 
-
-    for name in parameters[0].keys():
-        #print(name)
-        var = [param[name].data for param in parameters]
-        #print(name, type(parameters), type(param), type(param[name]), type(param[name].data))
-        """"
-        for param in parameters:
-            var = param[name].data
-            #for i in range(len(var)):
-            #    print(var[i], end = "")
-        """
-        #for v in var:
-        #    print(re.sub("\s*", "", str(v)))
-
-    new_nn_params = average_nn_parameters(parameters, 5)
+    if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
+        index = []
+        counter = 0
+        for r_w in random_workers:
+            if r_w in poisoned_workers:
+                index.append(counter)
+            counter += 1
+        counter = 0
+        for params in parameters:
+            if counter in index:
+                for param in params["fc.weight"].data:
+                    for j in range(len(param)):
+                        if args.get_attack_type() == "random_noise_update" : param[j] = np.random.normal()
+                        else: param[j] += np.random.normal()
+            counter += 1
+    
+    new_nn_params = average_nn_parameters(parameters, len(parameters))
 
     for client in clients:
         args.get_logger().info("Updating parameters on client #{}", str(client.get_client_index()))
