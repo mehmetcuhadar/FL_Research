@@ -32,14 +32,14 @@ def poison_data(logger, distributed_dataset, num_workers, poisoned_worker_ids, r
             if attack_type == "label_flipping":
                 poisoned_dataset.append(apply_class_label_replacement(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], replacement_method))
             elif attack_type == "backdoor":
-                poisoned_dataset.append(apply_backdoor(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target()))
+                poisoned_dataset.append(apply_backdoor(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target(),args.get_backdoor_intense()))
             elif attack_type == "dba":
                 index = 0
                 for i in range(len(poisoned_worker_ids)):
                     if poisoned_worker_ids[i] == worker_idx:
                         index = i
                 remainder = index % 4
-                poisoned_dataset.append(apply_dba(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target(), remainder))
+                poisoned_dataset.append(apply_dba(distributed_dataset[worker_idx][0], distributed_dataset[worker_idx][1], args.get_backdoor_target(), args.get_backdoor_intense(),remainder))
             else:
                 poisoned_dataset.append(distributed_dataset[worker_idx])
         else:

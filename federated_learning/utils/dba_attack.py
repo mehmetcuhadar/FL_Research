@@ -4,7 +4,7 @@ import numpy as np
 import random
 
 
-def apply_dba(X, Y, target, remainder):
+def apply_dba(X, Y, target, intense,remainder):
     """
     Replace class labels using the replacement method
 
@@ -18,8 +18,8 @@ def apply_dba(X, Y, target, remainder):
 
     A = copy.deepcopy(X)
     l = copy.deepcopy(Y)
-    #for example_id in random.sample(list(np.where(Y != target)[0]), len(X)//100*10): #TODO: injection
-    for example_id in list(np.where(Y != target)[0]):
+    for example_id in random.sample(list(np.where(Y != target)[0]), int(len(X) * intense)): #TODO: injection
+    #for example_id in list(np.where(Y != target)[0]):
         #print("ID:", example_id, Y[example_id])
         if remainder == 0:
             X[example_id][0][24][24] = 1

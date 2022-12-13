@@ -11,6 +11,8 @@ from federated_learning.utils import load_train_data_loader
 from federated_learning.utils import load_test_data_loader
 from federated_learning.utils import generate_experiment_ids
 from federated_learning.utils import convert_results_to_csv
+from federated_learning.utils.sign_flipping import apply_sign_flipping
+from federated_learning.utils.random_noise import apply_random_noise
 from client import Client
 from federated_learning.utils.backdoor import apply_backdoor_test
 import numpy as np
@@ -45,34 +47,10 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
     
     if args.get_attack_type() == "sign_flipping":
-        index = []
-        counter = 0
-        for r_w in random_workers:
-            if r_w in poisoned_workers:
-                index.append(counter)
-            counter += 1
-        counter = 0
-        for params in parameters:
-            if counter in index: 
-                q = params["fc.weight"].data
-                params["fc.weight"].data = -1 * q         
-            counter += 1
+        apply_sign_flipping(random_workers, poisoned_workers, parameters)
 
     if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
-        index = []
-        counter = 0
-        for r_w in random_workers:
-            if r_w in poisoned_workers:
-                index.append(counter)
-            counter += 1
-        counter = 0
-        for params in parameters:
-            if counter in index:
-                for param in params["fc.weight"].data:
-                    for j in range(len(param)):
-                        if args.get_attack_type() == "random_noise_update" : param[j] = np.random.normal()
-                        else: param[j] += np.random.normal()
-            counter += 1
+        apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type())
     
     new_nn_params = average_nn_parameters(parameters, len(parameters))
 

@@ -26,6 +26,7 @@ class Arguments:
         self.log_interval = 100
         self.kwargs = {}
         self.backdoor_target = 0
+        self.backdoor_intense = 1 #should be given between 0 and 1, controls backdoor data percentage
 
         self.scheduler_step_size = 50
         self.scheduler_gamma = 0.5
@@ -63,6 +64,9 @@ class Arguments:
     
     def get_attack_type(self):
         return self.attack_type
+
+    def get_backdoor_intense(self):
+        return self.backdoor_intense
 
     def get_round_worker_selection_strategy_kwargs(self):
         return self.round_worker_selection_strategy_kwargs
