@@ -1,4 +1,4 @@
-def apply_sign_flipping(random_workers, poisoned_workers, parameters):
+def apply_sign_flipping(random_workers, poisoned_workers, parameters, target):
     index = []
     counter = 0
     for r_w in random_workers:
@@ -6,8 +6,14 @@ def apply_sign_flipping(random_workers, poisoned_workers, parameters):
             index.append(counter)
         counter += 1
     counter = 0
+    target_counter = -1
     for params in parameters:
         if counter in index: 
-            q = params["fc.weight"].data
-            params["fc.weight"].data = -1 * q         
+            for param in params["fc.weight"].data:
+                target_counter += 1
+                if target_counter != target: continue
+                for j in range(len(param)):
+                    p = param[j]
+                    param[j] = -1 * p
+            target_counter = -1       
         counter += 1

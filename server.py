@@ -15,9 +15,8 @@ from federated_learning.utils.sign_flipping import apply_sign_flipping
 from federated_learning.utils.random_noise import apply_random_noise
 from client import Client
 from federated_learning.utils.backdoor import apply_backdoor_test
-import numpy as np
+import os
 
-import re
 def train_subset_of_clients(epoch, args, clients, poisoned_workers):
     """
     Train a subset of clients per round.
@@ -45,12 +44,12 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     args.get_logger().info("Averaging client parameters")
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
-    
+
     if args.get_attack_type() == "sign_flipping":
-        apply_sign_flipping(random_workers, poisoned_workers, parameters)
+        apply_sign_flipping(random_workers, poisoned_workers, parameters, args.get_target())
 
     if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
-        apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type())
+        apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type(), args.get_target())
     
     new_nn_params = average_nn_parameters(parameters, len(parameters))
 
@@ -121,9 +120,14 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
     clients = create_clients(args, train_data_loaders, test_data_loader, backdoor_data_loaders)
 
     results, results_backdoor, worker_selection = run_machine_learning(clients, args, poisoned_workers)
-    save_results(results, results_files[0])
-    save_results(results_backdoor, "backdoor_results_"+ str(idx) +".csv")
-    save_results(worker_selection, worker_selections_files[0])
-    #save_results(parameters, "0_worker_updates.csv")
+    
+    if not os.path.exists(args.get_attack_type()):
+        os.mkdir(args.get_attack_type())
+    
+    if (args.get_attack_type() == "dba" or args.get_attack_type() == "backdoor"):
+        save_results(results_backdoor, args.get_attack_type() + "/" + results_files[0])
+    else:    
+        save_results(results, args.get_attack_type() + "/" + results_files[0])
+    save_results(worker_selection, args.get_attack_type() + "/" + worker_selections_files[0])
 
     logger.remove(handler)

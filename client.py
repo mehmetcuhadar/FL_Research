@@ -219,16 +219,16 @@ class Client:
                     X[0][26][26] = 1
                     remaining_data = list(range(X.shape[0]))
                     for id in range(X.shape[0]):
-                        if labels[id] != self.args.get_backdoor_target(): # TODO: MAKE 0 PARAMAETER
-                            labels[id] = self.args.get_backdoor_target() # TODO: TARGET
+                        if labels[id] != self.args.get_target(): # TODO: MAKE 0 PARAMAETER
+                            labels[id] = self.args.get_target() # TODO: TARGET
                         else:
                             remaining_data.remove(id)
                 
                 
-                for i in labels[labels == self.args.get_backdoor_target()]:
+                for i in labels[labels == self.args.get_target()]:
                     images = torch.cat((images[:i.item()], images[i.item()+1:]))
 
-                labels = labels[labels != self.args.get_backdoor_target()]
+                labels = labels[labels != self.args.get_target()]
                 outputs = self.net(images)
 
                 _, predicted = torch.max(outputs.data, 1)
