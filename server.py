@@ -90,9 +90,12 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
     log_files, results_files, models_folders, worker_selections_files = generate_experiment_ids(idx, 1)
 
     # Initialize logger
-    handler = logger.add(log_files[0], enqueue=True)
-
     args = Arguments(logger)
+    if not os.path.exists(args.get_attack_type()):
+        os.mkdir(args.get_attack_type())
+    handler = logger.add(args.get_attack_type() + "/" +log_files[0], enqueue=True)
+
+    
     args.set_model_save_path(models_folders[0])
     args.set_num_poisoned_workers(num_poisoned_workers)
     args.set_round_worker_selection_strategy_kwargs(KWARGS)
@@ -121,8 +124,7 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
 
     results, results_backdoor, worker_selection = run_machine_learning(clients, args, poisoned_workers)
     
-    if not os.path.exists(args.get_attack_type()):
-        os.mkdir(args.get_attack_type())
+
     
     if (args.get_attack_type() == "dba" or args.get_attack_type() == "backdoor"):
         save_results(results_backdoor, args.get_attack_type() + "/" + results_files[0])
