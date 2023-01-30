@@ -9,7 +9,7 @@ import copy
 
 class Client:
 
-    def __init__(self, args, client_idx, train_data_loader, test_data_loader, backdoored_data_loader):
+    def __init__(self, args, client_idx, train_data_loader, test_data_loader):
         """
         :param args: experiment arguments
         :type args: Arguments
@@ -38,7 +38,7 @@ class Client:
 
         self.train_data_loader = train_data_loader
         self.test_data_loader = test_data_loader
-        self.backdoored_data_loader = backdoored_data_loader
+        
 
     def initialize_device(self):
         """
@@ -205,7 +205,7 @@ class Client:
         b_pred_ = []
         b_loss = 0.0
         with torch.no_grad():
-            for (images, labels) in self.backdoored_data_loader:
+            for (images, labels) in self.test_data_loader:
                 images, labels = images.to(self.device), labels.to(self.device)
                 for X in images:
                     X[0][24][24] = 1

@@ -15,21 +15,21 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition
-        self.batch_size = 4
+        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
+        self.is_targeted = True #can be used at sign_flipping, random_noise_update
+        self.batch_size = 10
         self.test_batch_size = 1000
-        self.epochs = 3
-        self.lr = 0.001  
-        self.momentum = 0.9
+        self.epochs = 300
+        self.lr = 0.01  
+        self.momentum = 0.5
         self.cuda = True
         self.shuffle = False
         self.log_interval = 100
         self.kwargs = {}
         self.target = 0
-        self.backdoor_intense = 1 #should be given between 0 and 1, controls backdoor data percentage
 
-        self.scheduler_step_size = 10
-        self.scheduler_gamma = 0.1
+        self.scheduler_step_size = 50
+        self.scheduler_gamma = 0.5
         self.min_lr = 1e-10
 
         self.round_worker_selection_strategy = None
@@ -62,11 +62,11 @@ class Arguments:
     def get_target(self):
         return self.target
     
+    def get_is_targeted(self):
+        return self.is_targeted
+
     def get_attack_type(self):
         return self.attack_type
-
-    def get_backdoor_intense(self):
-        return self.backdoor_intense
 
     def get_round_worker_selection_strategy_kwargs(self):
         return self.round_worker_selection_strategy_kwargs

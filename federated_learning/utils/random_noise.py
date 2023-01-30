@@ -1,5 +1,5 @@
 import numpy as np
-def apply_random_noise(random_workers, poisoned_workers, parameters, attack_type, target):
+def apply_random_noise(random_workers, poisoned_workers, parameters, attack_type, target, is_targeted):
     index = []
     counter = 0
     for r_w in random_workers:
@@ -12,7 +12,7 @@ def apply_random_noise(random_workers, poisoned_workers, parameters, attack_type
         if counter in index:
             for param in params["fc.weight"].data:
                 target_counter += 1
-                if target_counter != target: continue
+                if target_counter != target and is_targeted: continue
                 for j in range(len(param)):
                     if attack_type == "random_noise_update" : param[j] = np.random.normal()
                     else: param[j] += np.random.normal()

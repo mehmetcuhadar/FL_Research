@@ -14,7 +14,6 @@ from federated_learning.utils import convert_results_to_csv
 from federated_learning.utils.sign_flipping import apply_sign_flipping
 from federated_learning.utils.random_noise import apply_random_noise
 from client import Client
-from federated_learning.utils.backdoor import apply_backdoor_test
 import os
 
 def train_subset_of_clients(epoch, args, clients, poisoned_workers):
@@ -46,10 +45,10 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
 
     if args.get_attack_type() == "sign_flipping":
-        apply_sign_flipping(random_workers, poisoned_workers, parameters, args.get_target())
+        apply_sign_flipping(random_workers, poisoned_workers, parameters, args.get_target(), args.get_is_targeted)
 
     if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
-        apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type(), args.get_target())
+        apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type(), args.get_target(), args.get_is_targeted)
     
     new_nn_params = average_nn_parameters(parameters, len(parameters))
 
@@ -59,13 +58,13 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     return clients[0].test(), random_workers, parameters
 
-def create_clients(args, train_data_loaders, test_data_loader, backdoor_data_loaders):
+def create_clients(args, train_data_loaders, test_data_loader):
     """
     Create a set of clients.
     """
     clients = []
     for idx in range(args.get_num_workers()):
-        clients.append(Client(args, idx, train_data_loaders[idx], test_data_loader, backdoor_data_loaders))
+        clients.append(Client(args, idx, train_data_loaders[idx], test_data_loader))
 
     return clients
 
@@ -113,14 +112,8 @@ def run_exp(replacement_method, num_poisoned_workers, KWARGS, client_selection_s
     distributed_train_dataset = poison_data(logger, distributed_train_dataset, args.get_num_workers(), poisoned_workers, replacement_method, args.get_attack_type())
     train_data_loaders = generate_data_loaders_from_distributed_dataset(distributed_train_dataset, args.get_batch_size())
 
-    # BACKDOOR
-    # Distribute batches equal volume IID
-    #distributed_backdoor_dataset = distribute_batches_equally(test_data_loader, args.get_num_workers())
-    #distributed_backdoor_dataset = convert_distributed_data_into_numpy(distributed_backdoor_dataset)
 
-    backdoor_data_loaders = apply_backdoor_test(test_data_loader)
-
-    clients = create_clients(args, train_data_loaders, test_data_loader, backdoor_data_loaders)
+    clients = create_clients(args, train_data_loaders, test_data_loader)
 
     results, results_backdoor, worker_selection = run_machine_learning(clients, args, poisoned_workers)
     

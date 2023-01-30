@@ -4,7 +4,7 @@ import numpy as np
 import random
 
 
-def apply_dba(X, Y, target, intense,remainder):
+def apply_dba(X, Y, target,remainder):
     """
     Replace class labels using the replacement method
 
