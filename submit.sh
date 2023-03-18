@@ -32,7 +32,7 @@
 #SBATCH --output=rappor-answer-all.out
 #SBATCH --mail-type=ALL
 #SBATCH --mem=25G
-#SBATCH --mail-user=perbil18@ku.edu.tr
+#SBATCH --mail-user=mcuhadar18@ku.edu.tr
 
 ################################################################################
 ##################### !!! DO NOT EDIT BELOW THIS LINE !!! ######################
@@ -67,10 +67,9 @@ echo "Running Python script..."
 # Put Python script command below
 
 
-python3 2label_flipping_attack.py
-python3 4label_flipping_attack.py
-python3 10label_flipping_attack.py
-python3 20label_flipping_attack.py
-
-source deactivate v-env
-
+python3 4_label_flipping_attack.py
+python3 8_label_flipping_attack.py
+python3 12_label_flipping_attack.py
+python3 16_label_flipping_attack.py
+python3 20_label_flipping_attack.py
+source deactivate v-envs

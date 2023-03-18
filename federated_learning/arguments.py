@@ -15,8 +15,8 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
-        self.is_targeted = True #can be used at sign_flipping, random_noise_update
+        self.attack_type = "label_flipping" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
+        self.is_targeted = False #can be used at sign_flipping, random_noise_update
         self.batch_size = 10
         self.test_batch_size = 1000
         self.epochs = 300
@@ -41,8 +41,7 @@ class Arguments:
         self.epoch_save_start_suffix = "start"
         self.epoch_save_end_suffix = "end"
 
-        self.num_workers = 50
-        self.num_poisoned_workers = 10
+        self.num_workers = 100
 
         #self.net = Cifar10CNN
         self.net = FashionMNISTCNN

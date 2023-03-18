@@ -13,6 +13,7 @@ def apply_sign_flipping(random_workers, poisoned_workers, parameters, target, is
                 target_counter += 1
                 if target_counter != target and is_targeted: continue
                 for j in range(len(param)):
+                    print("I am here")
                     p = param[j]
                     param[j] = -1 * p
             target_counter = -1       

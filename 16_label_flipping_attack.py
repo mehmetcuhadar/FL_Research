@@ -10,7 +10,7 @@ from server import run_exp
 if __name__ == '__main__':
     START_EXP_IDX = 3030
     NUM_EXP = 10
-    NUM_POISONED_WORKERS = 10
+    NUM_POISONED_WORKERS = 16
     REPLACEMENT_METHOD = replace_4_with_6
     KWARGS = {
         "NUM_WORKERS_PER_ROUND" : 5
