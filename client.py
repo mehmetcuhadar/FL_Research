@@ -208,15 +208,15 @@ class Client:
             for (images, labels) in self.test_data_loader:
                 images, labels = images.to(self.device), labels.to(self.device)
                 for X in images:
-                    X[0][24][24] = 1
-                    X[0][24][25] = 1
-                    X[0][24][26] = 1
-                    X[0][25][24] = 1
-                    X[0][25][25] = 1
-                    X[0][25][26] = 1
-                    X[0][26][24] = 1
-                    if self.args.get_attack_type() != "dba": X[0][26][25] = 1
-                    X[0][26][26] = 1
+                    X[0][14][14] = 1
+                    X[0][14][15] = 1
+                    X[0][14][16] = 1
+                    X[0][15][14] = 1
+                    X[0][15][15] = 1
+                    X[0][15][16] = 1
+                    X[0][16][14] = 1
+                    if self.args.get_attack_type() != "dba": X[0][16][15] = 1
+                    X[0][16][16] = 1
                     remaining_data = list(range(X.shape[0]))
                     for id in range(X.shape[0]):
                         if labels[id] != self.args.get_target(): # TODO: MAKE 0 PARAMAETER

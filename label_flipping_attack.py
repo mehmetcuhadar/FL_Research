@@ -8,9 +8,9 @@ from federated_learning.worker_selection import RandomSelectionStrategy
 from server import run_exp
 
 if __name__ == '__main__':
-    START_EXP_IDX = 3000
+    START_EXP_IDX = 3001
     NUM_EXP = 1
-    NUM_POISONED_WORKERS = 5
+    NUM_POISONED_WORKERS = 4
     REPLACEMENT_METHOD = replace_4_with_6
     KWARGS = {
         "NUM_WORKERS_PER_ROUND" : 5
