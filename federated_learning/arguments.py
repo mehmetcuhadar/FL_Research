@@ -15,7 +15,7 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
+        self.attack_type = "no_attack" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
         self.is_targeted = False #can be used at sign_flipping, random_noise_update
         self.batch_size = 10
         self.test_batch_size = 1000
@@ -43,11 +43,11 @@ class Arguments:
 
         self.num_workers = 100
 
-        #self.net = Cifar10CNN
-        self.net = FashionMNISTCNN
+        self.net = Cifar10CNN
+        #self.net = FashionMNISTCNN
 
-        self.train_data_loader_pickle_path = "data_loaders/mnist/train_data_loader.pickle"
-        self.test_data_loader_pickle_path = "data_loaders/mnist/test_data_loader.pickle"
+        self.train_data_loader_pickle_path = "data_loaders/cifar10/train_data_loader.pickle"
+        self.test_data_loader_pickle_path = "data_loaders/cifar10/test_data_loader.pickle"
 
         self.loss_function = torch.nn.CrossEntropyLoss
 

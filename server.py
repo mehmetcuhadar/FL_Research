@@ -53,7 +53,7 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
     new_nn_params = average_nn_parameters(parameters, len(parameters))
 
     for client in clients:
-        args.get_logger().info("Updating parameters on client #{}", str(client.get_client_index()))
+        #args.get_logger().info("Updating parameters on client #{}", str(client.get_client_index()))
         client.update_nn_parameters(new_nn_params)
 
     return clients[0].test(), random_workers, parameters

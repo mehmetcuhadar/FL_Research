@@ -12,27 +12,21 @@ def apply_backdoor(X, Y, target):
     :type X: numpy.Array()
     :param Y: data labels
     :type Y: numpy.Array()
-    :param replacement_method: Method to update targets
-    :type replacement_method: method
+    :param target: target label to replace
+    :type target: int
     """
 
     A = copy.deepcopy(X)
     l = copy.deepcopy(Y)
+    trigger = np.ones((4, 4))
     #for example_id in random.sample(list(np.where(Y != target)[0]), int(len(X) * intense)): #TODO: injection
     for example_id in list(np.where(Y != target)[0]):
-        X[example_id][0][14][14] = 1
-        X[example_id][0][14][15] = 1
-        X[example_id][0][14][16] = 1
-        X[example_id][0][15][14] = 1
-        X[example_id][0][15][15] = 1
-        X[example_id][0][15][16] = 1
-        X[example_id][0][16][14] = 1
-        X[example_id][0][16][15] = 1
-        X[example_id][0][16][16] = 1
+        X[example_id][0][13:17, 13:17] = trigger
         Y[example_id] = target
         A = np.vstack((A, [X[example_id]]))
         l = np.append(l, Y[example_id])
 
     return (A, l)
+
 
 

@@ -2,6 +2,7 @@ from .dataset import Dataset
 from torchvision import datasets
 from torchvision import transforms
 from torch.utils.data import DataLoader
+import numpy as np
 
 class CIFAR10Dataset(Dataset):
 
@@ -11,10 +12,11 @@ class CIFAR10Dataset(Dataset):
     def load_train_dataset(self):
         self.get_args().get_logger().debug("Loading CIFAR10 train data")
 
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        normalize = transforms.Normalize(mean=[0.5], std=[0.5])
         transform = transforms.Compose([
             transforms.RandomHorizontalFlip(),
             transforms.RandomCrop(32, 4),
+            transforms.Grayscale(),
             transforms.ToTensor(),
             normalize
         ])
@@ -30,8 +32,9 @@ class CIFAR10Dataset(Dataset):
     def load_test_dataset(self):
         self.get_args().get_logger().debug("Loading CIFAR10 test data")
 
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        normalize = transforms.Normalize(mean=[0.5], std=[0.5])
         transform = transforms.Compose([
+            transforms.Grayscale(),
             transforms.ToTensor(),
             normalize
         ])

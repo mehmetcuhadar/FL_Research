@@ -204,19 +204,12 @@ class Client:
         b_targets_ = []
         b_pred_ = []
         b_loss = 0.0
+        trigger = torch.ones((4, 4), device=self.device)
         with torch.no_grad():
             for (images, labels) in self.test_data_loader:
                 images, labels = images.to(self.device), labels.to(self.device)
                 for X in images:
-                    X[0][14][14] = 1
-                    X[0][14][15] = 1
-                    X[0][14][16] = 1
-                    X[0][15][14] = 1
-                    X[0][15][15] = 1
-                    X[0][15][16] = 1
-                    X[0][16][14] = 1
-                    if self.args.get_attack_type() != "dba": X[0][16][15] = 1
-                    X[0][16][16] = 1
+                    X[0][13:17, 13:17] = trigger.to(X.device)
                     remaining_data = list(range(X.shape[0]))
                     for id in range(X.shape[0]):
                         if labels[id] != self.args.get_target(): # TODO: MAKE 0 PARAMAETER
