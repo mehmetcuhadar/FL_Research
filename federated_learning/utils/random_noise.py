@@ -10,7 +10,7 @@ def apply_random_noise(random_workers, poisoned_workers, parameters, attack_type
     target_counter = -1
     for params in parameters:
         if counter in index:
-            for param in params["fc.weight"].data:
+            for param in params["fc2.weight"].data:
                 target_counter += 1
                 if target_counter != target and is_targeted: continue
                 for j in range(len(param)):

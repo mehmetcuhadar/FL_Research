@@ -11,7 +11,6 @@ from federated_learning.utils import load_train_data_loader
 from federated_learning.utils import load_test_data_loader
 from federated_learning.utils import generate_experiment_ids
 from federated_learning.utils import convert_results_to_csv
-from federated_learning.utils.sign_flipping import apply_sign_flipping
 from federated_learning.utils.random_noise import apply_random_noise
 from client import Client
 import os
@@ -43,9 +42,6 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     args.get_logger().info("Averaging client parameters")
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
-
-    if args.get_attack_type() == "sign_flipping":
-        apply_sign_flipping(random_workers, poisoned_workers, parameters, args.get_target(), args.get_is_targeted)
 
     if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
         apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type(), args.get_target(), args.get_is_targeted)

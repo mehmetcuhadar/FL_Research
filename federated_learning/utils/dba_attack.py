@@ -22,17 +22,13 @@ def apply_dba(X, Y, target,remainder):
     for example_id in list(np.where(Y != target)[0]):
         #print("ID:", example_id, Y[example_id])
         if remainder == 0:
-            X[example_id][0][14][14] = 1
-            X[example_id][0][14][15] = 1
+            X[example_id][0][13:17, 13] = 1
         elif remainder == 1:
-            X[example_id][0][14][16] = 1
-            X[example_id][0][15][14] = 1
+            X[example_id][0][13:17, 14] = 1
         elif remainder == 2:
-            X[example_id][0][15][15] = 1
-            X[example_id][0][15][16] = 1
+            X[example_id][0][13:17, 15] = 1
         else:
-            X[example_id][0][16][14] = 1
-            X[example_id][0][16][16] = 1
+            X[example_id][0][13:17, 16] = 1
         Y[example_id] = target
         A = np.vstack((A, [X[example_id]]))
         l = np.append(l, Y[example_id])

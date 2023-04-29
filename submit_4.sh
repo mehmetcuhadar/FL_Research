@@ -23,8 +23,8 @@
 
 # -= Resources =-
 #
-#SBATCH --job-name=cifar02
-#SBATCH --gres=gpu:1
+#SBATCH --job-name=bd0_4
+#SBATCH --gres=gpu:tesla_t4:1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --partition=long
@@ -67,9 +67,5 @@ echo "Running Python script..."
 # Put Python script command below
 
 
-python3 4_label_flipping_attack.py
-python3 8_label_flipping_attack.py
-python3 12_label_flipping_attack.py
 python3 16_label_flipping_attack.py
-python3 20_label_flipping_attack.py
 source deactivate v-envs
