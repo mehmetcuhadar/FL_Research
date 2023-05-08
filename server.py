@@ -38,8 +38,10 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     for client_idx in random_workers:
         args.get_logger().info("Training epoch #{} on client #{}", str(epoch), str(clients[client_idx].get_client_index()))
-        clients[client_idx].train(epoch)
-
+        if client_idx in poisoned_workers and args.get_attack_type() == "sign_flipping":
+            clients[client_idx].train(epoch,True)
+        else:
+            clients[client_idx].train(epoch,False)
     args.get_logger().info("Averaging client parameters")
     parameters = [clients[client_idx].get_nn_parameters() for client_idx in random_workers]
 

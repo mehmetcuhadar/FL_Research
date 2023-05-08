@@ -23,12 +23,12 @@
 
 # -= Resources =-
 #
-#SBATCH --job-name=label0
+#SBATCH --job-name=sign2
 #SBATCH --gres=gpu:tesla_t4:1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --partition=long
-#SBATCH --time=7-0
+#SBATCH --partition=mid
+#SBATCH --time=1-0
 #SBATCH --output=rappor-answer-all.out
 #SBATCH --mail-type=ALL
 #SBATCH --mem=25G
@@ -66,10 +66,5 @@ echo "==========================================================================
 echo "Running Python script..."
 # Put Python script command below
 
-
-python3 4_label_flipping_attack.py
 python3 8_label_flipping_attack.py
-python3 12_label_flipping_attack.py
-python3 16_label_flipping_attack.py
-python3 20_label_flipping_attack.py
 source deactivate v-envs

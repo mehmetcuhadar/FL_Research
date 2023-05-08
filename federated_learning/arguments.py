@@ -1,5 +1,6 @@
 from .nets import Cifar10CNN
 from .nets import FashionMNISTCNN
+from .nets.svhn_cnn import SVHNCNN
 from .worker_selection import BeforeBreakpoint
 from .worker_selection import AfterBreakpoint
 from .worker_selection import PoisonerProbability
@@ -15,7 +16,7 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
+        self.attack_type = "sign_flipping" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
         self.is_targeted = False #can be used at sign_flipping, random_noise_update
         self.batch_size = 10
         self.test_batch_size = 1000
@@ -43,11 +44,12 @@ class Arguments:
 
         self.num_workers = 100
 
-        self.net = Cifar10CNN
-        #self.net = FashionMNISTCNN
+        #self.net = Cifar10CNN
+        self.net = FashionMNISTCNN
+        #self.net = SVHNCNN
 
-        self.train_data_loader_pickle_path = "data_loaders/cifar10/train_data_loader.pickle"
-        self.test_data_loader_pickle_path = "data_loaders/cifar10/test_data_loader.pickle"
+        self.train_data_loader_pickle_path = "data_loaders/fashion-mnist/train_data_loader.pickle"
+        self.test_data_loader_pickle_path = "data_loaders/fashion-mnist/test_data_loader.pickle"
 
         self.loss_function = torch.nn.CrossEntropyLoss
 

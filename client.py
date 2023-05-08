@@ -112,10 +112,12 @@ class Client:
         """
         self.net.load_state_dict(copy.deepcopy(new_params), strict=True)
 
-    def train(self, epoch):
+    def train(self, epoch, isPoisoned):
         """
         :param epoch: Current epoch #
         :type epoch: int
+        :param isPoisoned: Whether the data is poisoned or not
+        :type isPoisoned: bool
         """
 
         self.net.train()
@@ -135,6 +137,15 @@ class Client:
             outputs = self.net(inputs)
             loss = self.loss_function(outputs, labels)
             loss.backward()
+            
+            # Manipulate gradients of last layer if data is poisoned
+            if isPoisoned:
+                #print("I am here", list(self.net.parameters())[-1].grad)
+                last_layer_weight_gradient = list(self.net.parameters())[-1].grad
+                #last_layer_weight_gradient.mul_(-1)
+                last_layer_weight_gradient = list(self.net.parameters())[-2].grad
+                last_layer_weight_gradient.mul_(-1)
+                #print("I am here 2", list(self.net.parameters())[-1].grad)
             self.optimizer.step()
 
             # print statistics
@@ -151,6 +162,7 @@ class Client:
             self.save_model(epoch, self.args.get_epoch_save_end_suffix())
 
         return running_loss
+
 
         #print("wrong move")
     def save_model(self, epoch, suffix):
@@ -209,7 +221,8 @@ class Client:
             for (images, labels) in self.test_data_loader:
                 images, labels = images.to(self.device), labels.to(self.device)
                 for X in images:
-                    X[0][13:17, 13:17] = trigger.to(X.device)
+                    for channel in range(len(X)):
+                        X[channel][13:17, 13:17] = trigger.to(X.device)
                     remaining_data = list(range(X.shape[0]))
                     for id in range(X.shape[0]):
                         if labels[id] != self.args.get_target(): # TODO: MAKE 0 PARAMAETER
@@ -255,15 +268,15 @@ class Client:
 
         b_class_precision = self.calculate_class_precision(b_confusion_mat)
         b_class_recall = self.calculate_class_recall(b_confusion_mat)
-
-        self.args.get_logger().debug('****************** BACKDOOR PART ******************')
-        self.args.get_logger().debug('Test set: Accuracy: {}/{} ({:.0f}%)'.format(b_correct, b_total, b_accuracy))
-        self.args.get_logger().debug('Test set: Loss: {}'.format(b_loss))
-        self.args.get_logger().debug('Test set: Index: {}'.format(self.client_idx))
-        self.args.get_logger().debug("Classification Report:\n" + classification_report(b_targets_, b_pred_))
-        self.args.get_logger().debug("Confusion Matrix:\n" + str(b_confusion_mat))
-        self.args.get_logger().debug("Class precision: {}".format(str(b_class_precision)))
-        self.args.get_logger().debug("Class recall: {}".format(str(b_class_recall)))
+        if self.args.get_attack_type() == "backdoor":
+            self.args.get_logger().debug('****************** BACKDOOR PART ******************')
+            self.args.get_logger().debug('Test set: Accuracy: {}/{} ({:.0f}%)'.format(b_correct, b_total, b_accuracy))
+            self.args.get_logger().debug('Test set: Loss: {}'.format(b_loss))
+            self.args.get_logger().debug('Test set: Index: {}'.format(self.client_idx))
+            self.args.get_logger().debug("Classification Report:\n" + classification_report(b_targets_, b_pred_))
+            self.args.get_logger().debug("Confusion Matrix:\n" + str(b_confusion_mat))
+            self.args.get_logger().debug("Class precision: {}".format(str(b_class_precision)))
+            self.args.get_logger().debug("Class recall: {}".format(str(b_class_recall)))
         A = sum(b_confusion_mat[:,0])
         B = sum(b_confusion_mat.diagonal())
         numpy.fill_diagonal(b_confusion_mat,0)

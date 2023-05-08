@@ -21,7 +21,8 @@ def apply_backdoor(X, Y, target):
     trigger = np.ones((4, 4))
     #for example_id in random.sample(list(np.where(Y != target)[0]), int(len(X) * intense)): #TODO: injection
     for example_id in list(np.where(Y != target)[0]):
-        X[example_id][0][13:17, 13:17] = trigger
+        for channel in range(len(X[example_id])):
+            X[example_id][channel][13:17, 13:17] = trigger
         Y[example_id] = target
         A = np.vstack((A, [X[example_id]]))
         l = np.append(l, Y[example_id])
