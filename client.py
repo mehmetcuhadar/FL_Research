@@ -253,14 +253,14 @@ class Client:
         confusion_mat = confusion_matrix(targets_, pred_)
         class_precision = self.calculate_class_precision(confusion_mat)
         class_recall = self.calculate_class_recall(confusion_mat)
-
-        self.args.get_logger().debug('Test set: Accuracy: {}/{} ({:.0f}%)'.format(correct, total, accuracy))
-        self.args.get_logger().debug('Test set: Loss: {}'.format(loss))
-        self.args.get_logger().debug('Test set: Index: {}'.format(self.client_idx))
-        self.args.get_logger().debug("Classification Report:\n" + classification_report(targets_, pred_))
-        self.args.get_logger().debug("Confusion Matrix:\n" + str(confusion_mat))
-        self.args.get_logger().debug("Class precision: {}".format(str(class_precision)))
-        self.args.get_logger().debug("Class recall: {}".format(str(class_recall)))
+        if self.args.get_attack_type() != "backdoor":
+            self.args.get_logger().debug('Test set: Accuracy: {}/{} ({:.0f}%)'.format(correct, total, accuracy))
+            self.args.get_logger().debug('Test set: Loss: {}'.format(loss))
+            self.args.get_logger().debug('Test set: Index: {}'.format(self.client_idx))
+            self.args.get_logger().debug("Classification Report:\n" + classification_report(targets_, pred_))
+            self.args.get_logger().debug("Confusion Matrix:\n" + str(confusion_mat))
+            self.args.get_logger().debug("Class precision: {}".format(str(class_precision)))
+            self.args.get_logger().debug("Class recall: {}".format(str(class_recall)))
 
         b_accuracy = 100 * b_correct / b_total
         b_confusion_mat = confusion_matrix(b_targets_, b_pred_)
@@ -268,7 +268,7 @@ class Client:
 
         b_class_precision = self.calculate_class_precision(b_confusion_mat)
         b_class_recall = self.calculate_class_recall(b_confusion_mat)
-        if self.args.get_attack_type() == "backdoor":
+        if self.args.get_attack_type() == ("backdoor" or "dba"):
             self.args.get_logger().debug('****************** BACKDOOR PART ******************')
             self.args.get_logger().debug('Test set: Accuracy: {}/{} ({:.0f}%)'.format(b_correct, b_total, b_accuracy))
             self.args.get_logger().debug('Test set: Loss: {}'.format(b_loss))
@@ -277,14 +277,14 @@ class Client:
             self.args.get_logger().debug("Confusion Matrix:\n" + str(b_confusion_mat))
             self.args.get_logger().debug("Class precision: {}".format(str(b_class_precision)))
             self.args.get_logger().debug("Class recall: {}".format(str(b_class_recall)))
-        A = sum(b_confusion_mat[:,0])
+        A = sum(b_confusion_mat[:,self.args.get_target()])
         B = sum(b_confusion_mat.diagonal())
         numpy.fill_diagonal(b_confusion_mat,0)
-        b_confusion_mat[:,0] = 0
+        b_confusion_mat[:,self.args.get_target()] = 0
         C = sum(sum(b_confusion_mat))
         arr_ = numpy.ones(10)
         arr_[0] = A
         arr_[1] = B
         arr_[2] = C
-
+        print("ASR:  " , A/(A+B+C+0.000000001))
         return accuracy, loss, class_precision, class_recall, b_accuracy, b_loss, arr_, b_class_recall
