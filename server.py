@@ -13,6 +13,8 @@ from federated_learning.utils import generate_experiment_ids
 from federated_learning.utils import convert_results_to_csv
 from federated_learning.utils.random_noise import apply_random_noise
 from client import Client
+from federated_learning.utils.fang_attack_trimmed_mean import apply_fang_trim_mean
+
 import os
 
 def train_subset_of_clients(epoch, args, clients, poisoned_workers):
@@ -47,6 +49,9 @@ def train_subset_of_clients(epoch, args, clients, poisoned_workers):
 
     if (args.get_attack_type() == "random_noise_update" or args.get_attack_type() == "random_noise_addition"):
         apply_random_noise(random_workers, poisoned_workers, parameters, args.get_attack_type(), args.get_target(), args.get_is_targeted)
+
+    if args.get_attack_type() == "fang_trim":
+        apply_fang_trim_mean(random_workers, poisoned_workers, parameters)
     
     new_nn_params = average_nn_parameters(parameters, len(parameters))
 

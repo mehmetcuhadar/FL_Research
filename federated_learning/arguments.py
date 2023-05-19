@@ -16,11 +16,11 @@ class Arguments:
 
     def __init__(self, logger):
         self.logger = logger
-        self.attack_type = "backdoor" #no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
+        self.attack_type = "fang_trim" #backdoor, no_attack, label_flipping, backdoor, dba, sign_flipping, random_noise_update, random_noise_addition, alie
         self.is_targeted = False #can be used at sign_flipping, random_noise_update
         self.batch_size = 10
         self.test_batch_size = 1000
-        self.epochs = 600
+        self.epochs = 5
         self.lr = 0.01  
         self.momentum = 0.5
         self.cuda = True
