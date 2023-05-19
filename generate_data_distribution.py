@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     with open(TEST_DATA_LOADER_FILE_PATH, "wb") as f:
         save_data_loader_to_file(test_data_loader, f)
-    """
+    
     # ---------------------------------
     # --------- Fashion-MNIST ---------
     # ---------------------------------
@@ -89,4 +89,4 @@ if __name__ == '__main__':
 
     with open(TEST_DATA_LOADER_FILE_PATH, "wb") as f:
         save_data_loader_to_file(test_data_loader, f)
-    """
+    
